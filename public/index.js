@@ -6,10 +6,7 @@ let allBlogs = [
     { id: '2', title: 'Title 2', body: 'Muspi merol Muspi merolMuspi merolMuspi' },
 ];
 
-// let editBlog = (blogToEdit) => {
-//     blogBeingEdited = Object.assign({}, blogToEdit);
-//     update();
-// };
+
 
 // let updateTitle = (blogToEdit, title) => {
 //     blogToEdit.title = title;
@@ -29,17 +26,10 @@ let allBlogs = [
 // };
 
 
-// let EditBlogButton = (blog) =>
-//     h('button', {
-//         onClick: () => editBlog(blog)
-//     }, 'Edit Blog');
-
-// let EditBlogForm = (blog) =>
-//     h('form', null, [
-//         h('input', { value: blogBeingEdited.title, onChange: (event) => updateTitle(blogBeingEdited, event.target.value) }),
-//         h('input', { value: blogBeingEdited.body, onChange: (event) => updateBody(blogBeingEdited, event.target.value) }),
-//         h('button', { onClick: () => saveBlog(blogBeingEdited) }, 'Save'),
-//     ]);
+let EditBlogButton = ({blog, blogBeingEdited}) =>
+    h('button', {
+        onClick: () => editBlog(blog, blogBeingEdited)
+    }, 'Edit Blog');
 
 let DeleteBlogButton = ({blog, removeBlog}) =>
     h('button', {
@@ -47,19 +37,43 @@ let DeleteBlogButton = ({blog, removeBlog}) =>
         onClick: () => removeBlog(blog)
     }, 'Remove Blog');
 
-let BlogRow = ({blog, removeBlog}) =>
+let BlogRow = ({blog, removeBlog, blogBeingEdited}) =>
     h('div', null, [
         h('h1', null, blog.title),
         h('p', null, blog.body),
         h(DeleteBlogButton, {blog, removeBlog}),
-        // h(EditBlogButton, blog),
-        // blogBeingEdited && blog.id === blogBeingEdited.id && h(EditBlogForm, blog)
+        h(EditBlogButton, blog),
+        blogBeingEdited && blog.id === blogBeingEdited.id && h(EditBlogForm, blog)
+    ]);
+    // <div>
+    //     <h1>{blog.title}</h1>
+    //     <p>{blog.body}</p>
+    //     <DeleteBlogButton blog={blog} removeBlog={removeBlog} />
+    //     <EditBlogButton blog={blog} editBlog={editBlog} />
+    //     {
+    //     blogBeingEdited && blog.id === blogBeingEdited.id && 
+    //     <EditBlogForm 
+    //     blog={blog} 
+    //     blogBeingEdited={blog} 
+    //     updateTitle={updateTitle} 
+    //     updateBody={updateBody} 
+    //     saveBlog={saveBlog} 
+    //     />
+    //     }
+    // </div>
+
+let EditBlogForm = ({blog, blogBeingEdited}) =>
+    h('form', null, [
+        h('input', { key: 'titleInput', value: blogBeingEdited.title, onChange: (event) => updateTitle(blogBeingEdited, event.target.value) }),
+        h('input', { key: 'bodyInput', value: blogBeingEdited.body, onChange: (event) => updateBody(blogBeingEdited, event.target.value) }),
+        h('button', { key: 'save', onClick: () => saveBlog(blogBeingEdited) }, 'Save'),
     ]);
 
-let BlogList = ({ blogs, removeBlog}) =>
+let BlogList = ({ blogs, removeBlog, blogBeingEdited, editBlog}) =>
     h('div', { className: 'blog-list' },
-        blogs.map(blog => h(BlogRow, {blog, removeBlog}))
-    );
+        blogs.map(blog => <BlogRow blog={blog} removeBlog={removeBlog} blogBeingEdited={blogBeingEdited} />
+
+        ));
 
 class Page extends React.Component {
     constructor(props) {
@@ -80,11 +94,27 @@ class Page extends React.Component {
             this.setState({
                 blogs: prunedBlogs
             })
+        
+        let editBlog = (blogToEdit) => {
+            let {id} = blogToEdit;
+            let editingBlog = Object.assign({}, blogToEdit);
+            
         }
 
-        return h('div', null, [
-            h(BlogList, {blogs, removeBlog})
-        ])
+        }
+
+        // return h('div', null, [
+        //     h(BlogList, {blogs, removeBlog, blogBeingEdited})
+        // ])
+        return (
+            <div>
+                <BlogList 
+                    blogs={blogs} 
+                    removeBlog={removeBlog} 
+                    blogBeingEdited={blogBeingEdited} 
+                />
+            </div>
+        )
     }
 }
 
