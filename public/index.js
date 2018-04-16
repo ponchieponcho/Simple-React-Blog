@@ -26,16 +26,11 @@ let allBlogs = [
 // };
 
 
-let EditBlogButton = ({blog, blogBeingEdited}) =>
-    h('button', {
-        onClick: () => editBlog(blog, blogBeingEdited)
-    }, 'Edit Blog');
+let EditBlogButton = ({blog, blogBeingEdited}) => 
+    <button onClick={() => editBlog(blog, blogBeingEdited)}>Edit Blog</button>;
 
 let DeleteBlogButton = ({blog, removeBlog}) =>
-    h('button', {
-        className: 'big-red',
-        onClick: () => removeBlog(blog)
-    }, 'Remove Blog');
+    <button className="big-red" onClick={() => removeBlog(blog)}>Remove Blog</button>;
 
 let BlogRow = ({blog, removeBlog, blogBeingEdited}) =>
     h('div', null, [
@@ -48,8 +43,14 @@ let BlogRow = ({blog, removeBlog, blogBeingEdited}) =>
     // <div>
     //     <h1>{blog.title}</h1>
     //     <p>{blog.body}</p>
-    //     <DeleteBlogButton blog={blog} removeBlog={removeBlog} />
-    //     <EditBlogButton blog={blog} editBlog={editBlog} />
+    //     <DeleteBlogButton 
+            // blog={blog} 
+            // removeBlog={removeBlog} 
+            // />
+    //     <EditBlogButton 
+            // blog={blog} 
+            // editBlog={editBlog} 
+            // />
     //     {
     //     blogBeingEdited && blog.id === blogBeingEdited.id && 
     //     <EditBlogForm 
@@ -68,7 +69,9 @@ let EditBlogForm = ({blog, blogBeingEdited}) =>
         h('input', { key: 'bodyInput', value: blogBeingEdited.body, onChange: (event) => updateBody(blogBeingEdited, event.target.value) }),
         h('button', { key: 'save', onClick: () => saveBlog(blogBeingEdited) }, 'Save'),
     ]);
-
+    // <form>
+    //     <input value={blogBeingEdited.title} onChange={ (event) => updateTitle(blogBeingEdited, event.target.value)}></input>
+    //     </form>
 let BlogList = ({ blogs, removeBlog, blogBeingEdited, editBlog}) =>
     h('div', { className: 'blog-list' },
         blogs.map(blog => <BlogRow blog={blog} removeBlog={removeBlog} blogBeingEdited={blogBeingEdited} />
@@ -103,9 +106,6 @@ class Page extends React.Component {
 
         }
 
-        // return h('div', null, [
-        //     h(BlogList, {blogs, removeBlog, blogBeingEdited})
-        // ])
         return (
             <div>
                 <BlogList 
