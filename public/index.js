@@ -7,18 +7,24 @@ const allBlogs = [
 
 let DeleteBlogButton = ({ blog, removeBlog }) =>
     <button
-        className="big-red"
         onClick={() => removeBlog(blog)}
     >
         Remove Blog
-    </button>
+    </button>;
 
 let EditBlogButton = ({ blog, editBlog }) =>
     <button
         onClick={() => editBlog(blog)}
     >
         Edit Blog
-    </button>
+    </button>;
+
+let ReloadBlogButton = ({ blog, reloadBlog }) =>
+    <button
+        onClick={() => reloadBlog(blog)}
+    >
+        Refresh Blog
+    </button>;
 
 let EditBlogForm = ({ blog, blogBeingEdited, updateTitle, updateBody, saveBlog }) =>
     <form>
@@ -64,9 +70,26 @@ class BlogListPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            blogs: allBlogs,
+            blogs: [],
             blogBeingEdited: null
         };
+    }
+
+    componentDidMount() {
+       this.fetchData();
+   }
+
+    fetchData() {
+        fetch('https://jsonplaceholder.typicode.com/posts')
+        .then((res) => {
+            return res.json();
+        })
+        .then((array)=> {
+            return array.slice(0, 6)
+        })
+        .then(blogs=> {
+            this.setState({blogs})
+        })
     }
 
     render() {
@@ -85,6 +108,10 @@ class BlogListPage extends React.Component {
                 blogBeingEdited: Object.assign({}, blogToEdit)
             });
         };
+
+        let reloadBlog = (blogToReload) => {
+            this.fetchData();
+        }
 
         let updateTitle = (blogToEdit, title) => {
             this.setState({
@@ -109,7 +136,9 @@ class BlogListPage extends React.Component {
         };
 
         return (
+            
             <div>
+                <ReloadBlogButton reloadBlog={reloadBlog}/>
                 <BlogList
                     blogs={blogs}
                     blogBeingEdited={blogBeingEdited}
