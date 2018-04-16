@@ -1,10 +1,5 @@
 const root = document.querySelector('.react-root');
 
-const allBlogs = [
-    { id: '1', title: 'Hello world!', body: 'Lorem ipsum.' },
-    { id: '2', title: 'Goodbye world', body: 'Muspi merol.' },
-];
-
 let DeleteBlogButton = ({ blog, removeBlog }) =>
     <button
         onClick={() => removeBlog(blog)}
@@ -25,6 +20,17 @@ let ReloadBlogButton = ({ blog, reloadBlog }) =>
     >
         Refresh Blog
     </button>;
+
+let FilterByIdButton = ({ blogs, filterBlog, filter, updateFilter}) =>
+    <div>
+          <button
+        onClick={() => filterBlog(blogs, filter) }
+    >
+        Filter By Id
+    </button>
+    <input value={filter} onChange = {(event) => updateFilter(event.target.value)}/>
+    </div>
+    
 
 let EditBlogForm = ({ blog, blogBeingEdited, updateTitle, updateBody, saveBlog }) =>
     <form>
@@ -71,7 +77,8 @@ class BlogListPage extends React.Component {
         super(props);
         this.state = {
             blogs: [],
-            blogBeingEdited: null
+            blogBeingEdited: null,
+            filter: ""
         };
     }
 
@@ -93,7 +100,7 @@ class BlogListPage extends React.Component {
     }
 
     render() {
-        let { blogs, blogBeingEdited } = this.state;
+        let { blogs, blogBeingEdited, filter } = this.state;
 
         let removeBlog = (blogToDelete) => {
             let { id } = blogToDelete;
@@ -125,6 +132,12 @@ class BlogListPage extends React.Component {
             });
         };
 
+        let updateFilter = (filter) => {
+            this.setState({
+                filter: filter
+            });
+        };
+
         let saveBlog = (blogToEdit) => {
             let blogs = this.state.blogs.slice();
             let blog = blogs.find(blog => blog.id === blogToEdit.id);
@@ -135,10 +148,19 @@ class BlogListPage extends React.Component {
             });
         };
 
+        let filterBlog = (blogs, filterId) => {
+            let filteredBlogs = blogs.filter(blog => parseInt(filterId) === blog.id);
+            this.setState({
+                blogs: filteredBlogs
+            });
+
+        }
+
         return (
             
             <div>
-                <ReloadBlogButton reloadBlog={reloadBlog}/>
+                <ReloadBlogButton reloadBlog={reloadBlog} />
+                <FilterByIdButton filterBlog={filterBlog} blogs={blogs} filter={filter} updateFilter={updateFilter}/>
                 <BlogList
                     blogs={blogs}
                     blogBeingEdited={blogBeingEdited}
