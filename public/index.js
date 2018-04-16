@@ -70,8 +70,6 @@ class BlogListPage extends React.Component {
     }
 
     render() {
-        // let blogs = this.state.blogs;
-        // let blogBeingEdited = this.state.blogBeingEdited;
         let { blogs, blogBeingEdited } = this.state;
 
         let removeBlog = (blogToDelete) => {
